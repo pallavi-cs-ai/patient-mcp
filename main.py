@@ -28,16 +28,22 @@ def inspect_patient_context(payload: str) -> dict[str, Any]:
     ts = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
     file_path = SAMPLES_DIR / f"patient_context_{ts}.json"
 
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2)
+    try:
+        parsed = json.loads(payload)
+    except Exception:
+        parsed = {"raw_payload": payload}
 
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(parsed, f, indent=2)
+    
     print("Saved payload to:", file_path)
-    print("Top-level keys:", list(payload.keys()))
+    print("Payload type:", type(parsed))
+    print("Preview keys:", list(parsed.keys()) if isinstance(parsed, dict) else "Not a dict")
 
     return {
         "saved_to": str(file_path),
-        "top_level_keys": list(payload.keys()),
-        "payload_preview": payload,
+        "payload_type": type(parsed).__name__,
+        "payload_preview": parsed,
     }
 
 if __name__ == "__main__":
