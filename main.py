@@ -23,7 +23,7 @@ def debug_payload(payload: str) -> str:
     return payload
 
 @mcp.tool()
-def inspect_patient_context(payload: dict[str, Any]) -> dict[str, Any]:
+def inspect_patient_context(payload: str) -> dict[str, Any]:
     """Save incoming patient payload for inspection."""
     ts = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
     file_path = SAMPLES_DIR / f"patient_context_{ts}.json"
