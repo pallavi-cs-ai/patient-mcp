@@ -1,13 +1,14 @@
-from fastapi import FastAPI, Request
+from mcp.server.fastmcp import FastMCP
 
-app = FastAPI()
+mcp = FastMCP("Patient Summary MCP")
 
-@app.get("/")
-def root():
-    return {"status": "ok"}
+# Debug tool to see incoming data
+@mcp.tool()
+def debug_payload(payload: str) -> str:
+    """Echo incoming payload for debugging"""
+    print("Incoming payload:", payload)
+    return f"Received: {payload}"
 
-@app.post("/mcp")
-async def mcp(request: Request):
-    body = await request.json()
-    print("Incoming request:", body)
-    return {"message": "received", "data": body}
+
+if __name__ == "__main__":
+    mcp.run(transport="streamable-http")
