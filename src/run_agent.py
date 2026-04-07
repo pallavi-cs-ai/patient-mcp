@@ -3,8 +3,8 @@ from dotenv import load_dotenv
 from groq import Groq
 import json
 import os
-from evidence import get_evidence_insights
-from analysis import analyze_thyroid
+from .evidence import get_evidence_insights
+from .analysis import analyze_thyroid
 
 load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))

@@ -7,6 +7,7 @@ cffi==2.0.0
 click==8.3.1
 cryptography==46.0.6
 fastapi==0.135.2
+groq==0.18.0
 h11==0.16.0
 httpcore==1.0.9
 httpx==0.28.1
@@ -15,9 +16,10 @@ idna==3.11
 jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
 mcp==1.26.0
-pycparser==3.0
+pycparser==2.23
 pydantic==2.12.5
 pydantic-settings==2.13.1
+python-dotenv==1.1.0
 pydantic_core==2.41.5
 PyJWT==2.12.1
 python-dotenv==1.2.2
