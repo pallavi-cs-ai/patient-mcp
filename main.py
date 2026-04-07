@@ -5,6 +5,10 @@ from datetime import datetime
 from typing import Any
 from mcp.server.fastmcp import FastMCP
 
+from analysis import analyze_thyroid
+from evidence import get_evidence_insights
+from run_agent import run_thyroid_agent, load_reports
+
 mcp = FastMCP(
     "Patient Summary MCP",
     json_response=True,
@@ -45,6 +49,40 @@ def inspect_patient_context(payload: str) -> dict[str, Any]:
         "payload_type": type(parsed).__name__,
         "payload_preview": parsed,
     }
+
+@mcp.tool()
+def analyze_thyroid_reports(payload: str) -> str:
+    """Analyze thyroid report JSON and return structured thyroid summary."""
+
+    data = json.loads(payload)
+
+    analysis_result = analyze_thyroid(data)
+    evidence = get_evidence_insights(analysis_result)
+
+    # convert JSON directly into report text
+    reports_text = build_reports_text(data)
+
+    result = run_thyroid_agent(reports_text, analysis_result)
+
+    evidence_text = "\n\n## Evidence Insights\n"
+    for e in evidence:
+        evidence_text += f"- {e['summary']} ({e['confidence']})\n"
+
+    return result + evidence_text
+
+def build_reports_text(data: dict) -> str:
+    texts = []
+    if "patient_name" in data:
+        texts.append(f"PATIENT: {data['patient_name']}")
+
+    for report in sorted(data.get("reports", []), key=lambda r: r.get("date", "")):
+        lines = [f"DATE: {report.get('date', '')}"]
+        for key, value in report.items():
+            if key != "date":
+                lines.append(f"{key}: {value}")
+        texts.append("\n".join(lines))
+
+    return "\n\n---\n\n".join(texts)
 
 if __name__ == "__main__":
     mcp.run(transport="streamable-http")
