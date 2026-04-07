@@ -31,4 +31,3 @@ typing_extensions==4.15.0
 uvicorn==0.42.0
 openai
 python-dotenv
-model="gpt-4.1"
