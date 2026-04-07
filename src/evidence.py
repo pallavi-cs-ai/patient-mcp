@@ -9,31 +9,35 @@ EVIDENCE_DB = {
         "source": "Clinical practice principle",
         "confidence": "high"
     },
-    "fluctuating_pattern": {
-        "summary": "Fluctuating values across multiple timepoints indicate variability and reduce confidence in a stable trend.",
+    "fluctuating_instability": {
+        "summary": "Fluctuating values across multiple timepoints indicate variability and reduce confidence in a consistent clinical trend.",
         "source": "Clinical interpretation principle",
         "confidence": "high"
     },
-    "stable_t3": {
-        "summary": "T3 levels may remain stable in early or evolving thyroid-related changes.",
-        "source": "Endocrine physiology understanding",
-        "confidence": "moderate"
+    "improving_trend": {
+        "summary": "Consistent improvement across multiple timepoints strengthens confidence in a true improving trend rather than isolated variation.",
+        "source": "Clinical interpretation principle",
+        "confidence": "high"
     }
 }
+
 
 def get_evidence_insights(analysis_result):
     insights = []
 
-    pattern = analysis_result.get("pattern", "").lower()
+    tsh_pattern = analysis_result.get("tsh_pattern", "").lower()
+    t4_pattern = analysis_result.get("t4_pattern", "").lower()
 
-    if "fluctuating" in pattern:
-        insights.append(EVIDENCE_DB["fluctuating_pattern"])
+    # Main evidence based on TSH pattern
+    if "fluctuating" in tsh_pattern:
+        insights.append(EVIDENCE_DB["fluctuating_instability"])
+    elif "improving" in tsh_pattern:
+        insights.append(EVIDENCE_DB["improving_trend"])
     else:
         insights.append(EVIDENCE_DB["longitudinal_consistent"])
 
-    if "tsh" in pattern or "t4" in pattern:
+    # Add hypothyroid evidence only for worsening thyroid pattern
+    if tsh_pattern == "worsening" and t4_pattern == "worsening":
         insights.append(EVIDENCE_DB["hypothyroid_trend"])
-
-    insights.append(EVIDENCE_DB["stable_t3"])
 
     return insights
