@@ -5,9 +5,9 @@ from datetime import datetime
 from typing import Any
 from mcp.server.fastmcp import FastMCP
 
-from analysis import analyze_thyroid
-from evidence import get_evidence_insights
-from run_agent import run_thyroid_agent, load_reports
+from src.analysis import analyze_thyroid
+from src.evidence import get_evidence_insights
+from src.run_agent import run_thyroid_agent
 
 mcp = FastMCP(
     "Patient Summary MCP",
